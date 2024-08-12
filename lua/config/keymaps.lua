@@ -33,7 +33,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     bufmap("n", "gs", "<cmd>lua vim.lsp.buf.signature_help()<cr>")
 
     -- Renames all references to the symbol under the cursor
-    bufmap("n", "<leader>vrn", "<cmd>lua vim.lsp.buf.rename()<cr>")
+    bufmap("n", "<leader>vr", "<cmd>lua vim.lsp.buf.rename()<cr>")
 
     -- Selects a code action available at the current cursor position
     bufmap("n", "<F4>", "<cmd>lua vim.lsp.buf.code_action()<cr>")
