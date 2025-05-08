@@ -46,3 +46,7 @@ keymap.set("v", "<leader>ccf", "<CMD>'<,'>CodeCompanion Fix Code<CR>")
 keymap.set("v", "<leader>cce", "<CMD>'<,'>CodeCompanion Explain<CR>")
 keymap.set("v", "<leader>cct", "<CMD>'<,'>CodeCompanion Unit Tests<CR>")
 keymap.set("n", "<leader>ccg", "<CMD>CodeCompanion Generate a Commit Message<CR>")
+
+-- Move Lines
+keymap.set("v", "J", ":m'>+1<CR>gv=gv")
+keymap.set("v", "K", ":m'<-2<CR>gv=gv")
