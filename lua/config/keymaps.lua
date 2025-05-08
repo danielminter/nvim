@@ -39,8 +39,9 @@ keymap.set("n", "<leader>ls", "<CMD>LspStop<CR>", opts)
 keymap.set("n", "<leader>lS", "<CMD>LspStart<CR>", opts)
 
 -- CodeCompanion
-keymap.set("n", "<leader>cca", "<CMD>'<,'>CodeCompanionActions<CR>")
-keymap.set("v", "<leader>cca", "<CMD>'<,'>CodeCompanionActions<CR>")
+keymap.set("n", "<leader>cca", "<CMD>CodeCompanionActions<CR>")
+keymap.set("v", "<leader>cca", "<CMD>CodeCompanionActions<CR>")
+keymap.set("n", "<leader>ccc", "<CMD>CodeCompanionChat Toggle<CR>")
 keymap.set("v", "<leader>ccf", "<CMD>'<,'>CodeCompanion Fix Code<CR>")
 keymap.set("v", "<leader>cce", "<CMD>'<,'>CodeCompanion Explain<CR>")
 keymap.set("v", "<leader>cct", "<CMD>'<,'>CodeCompanion Unit Tests<CR>")
