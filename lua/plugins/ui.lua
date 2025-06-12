@@ -1,255 +1,98 @@
 return {
-	-- Bufferline
 	{
-		"akinsho/bufferline.nvim",
-		version = "*",
-		depenencies = "nvim-tree/nvim-web-devicons",
-    		opts = {
-		  offsets = {
-		    {
-		      filetype = "NvimTree",
-		      text = function()
-			return vim.fn.getcwd()
-		      end,
-		      highlight = "Directory",
-		      text_align = "left"
-		    }
-		  },
-		},
-		keys = {},
-	},
-	-- Lualine
-	{
-		"nvim-lualine/lualine.nvim",
-		dependencies = { "nvim-tree/nvim-web-devicons" },
-		opts = {},
-		keys = {},
-	},
-	-- Neoscroll
-	{
-		"karb94/neoscroll.nvim",
-		lazy = true,
-		opts = {},
-		keys = {},
-	},
-	-- Noice
-	{
-		"folke/noice.nvim",
-		dependencies = { "MunifTanjim/nui.nvim" },
+		"folke/snacks.nvim",
+		priority = 1000,
 		lazy = false,
 		opts = {
-			lsp = {
-				override = {
-					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
-					["vim.lsp.util.stylize_markdown"] = true,
-				},
+			bigfile = { enabled = true },
+			dashboard = { enabled = true },
+			explorer = { enabled = true },
+			indent = { enabled = true },
+			input = { enabled = true },
+			notifier = {
+				enabled = true,
+				timeout = 3000,
 			},
-			presets = {
-				bottom_search = true, -- use a classic bottom cmdline for search
-				command_palette = true, -- position the cmdline and popupmenu together
-				long_message_to_split = true, -- long messages will be sent to a split
-				inc_rename = false, -- enables an input dialog for inc-rename.nvim
-				lsp_doc_border = false, -- add a border to hover docs and signature help
-			},
-
+			picker = { enabled = true },
+			quickfile = { enabled = true },
+			scope = { enabled = true },
+			scroll = { enabled = true },
+			statuscolumn = { enabled = true },
+			words = { enabled = true },
 		},
-		keys = {},
-	},
-
-	--  mini.indentscope [guides]
-  --  https://github.com/echasnovski/mini.indentscope
-  {
-    "echasnovski/mini.indentscope",
-    event = { "BufReadPre", "BufNewFile" },
-    opts = {
-      draw = { delay = 0, animation = function() return 0 end },
-      options = { border = "top", try_as_border = true },
-      symbol = "▏",
-    },
-    config = function(_, opts)
-      require("mini.indentscope").setup(opts)
-
-      -- Disable for certain filetypes
-      vim.api.nvim_create_autocmd({ "FileType" }, {
-        desc = "Disable indentscope for certain filetypes",
-        callback = function()
-          local ignored_filetypes = {
-            "aerial",
-            "dashboard",
-            "help",
-            "lazy",
-            "leetcode.nvim",
-            "mason",
-            "neo-tree",
-            "NvimTree",
-            "neogitstatus",
-            "startify",
-            "toggleterm",
-            "Trouble",
-            "calltree",
-            "coverage"
-          }
-          if vim.tbl_contains(ignored_filetypes, vim.bo.filetype) then
-            vim.b.miniindentscope_disable = true
-          end
-        end,
-      })
-    end
-  },
-
---  Telescope [search] + [search backend] dependency
-  --  https://github.com/nvim-telescope/telescope.nvim
-  --  https://github.com/nvim-telescope/telescope-fzf-native.nvim
-  --  https://github.com/debugloop/telescope-undo.nvim
-  --  NOTE: Normally, plugins that depend on Telescope are defined separately.
-  --  But its Telescope extension is added in the Telescope 'config' section.
-  {
-    "nvim-telescope/telescope.nvim",
-    dependencies = {
-      {
-        "debugloop/telescope-undo.nvim",
-        cmd = "Telescope",
-      },
-      {
-        "nvim-telescope/telescope-fzf-native.nvim",
-        enabled = vim.fn.executable("make") == 1,
-        build = "make",
-      },
-    },
-    cmd = "Telescope",
-    opts = function()
-      local actions = require("telescope.actions")
-      local mappings = {
-        i = {
-          ["<C-j>"] = actions.move_selection_next,
-          ["<C-k>"] = actions.move_selection_previous,
-          ["<ESC>"] = actions.close,
-          ["<C-c>"] = false,
-        },
-        n = { ["q"] = actions.close },
-      }
-      return {
-        defaults = {
-          path_display = { "truncate" },
-          sorting_strategy = "ascending",
-          layout_config = {
-            horizontal = {
-              prompt_position = "top",
-              preview_width = 0.50,
-            },
-            vertical = {
-              mirror = false,
-            },
-            width = 0.87,
-            height = 0.80,
-            preview_cutoff = 120,
-          },
-          mappings = mappings,
-        },
-        extensions = {
-          undo = {
-            use_delta = true,
-            side_by_side = true,
-            vim_diff_opts = { ctxlen = 0 },
-            entry_format = "󰣜 #$ID, $STAT, $TIME",
-            layout_strategy = "horizontal",
-            layout_config = {
-              preview_width = 0.65,
-            },
-            mappings = {
-              i = {
-                ["<cr>"] = require("telescope-undo.actions").yank_additions,
-                ["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
-                ["<C-cr>"] = require("telescope-undo.actions").restore,
-              },
-            },
-          },
-        },
-      }
-    end,
-    config = function(_, opts)
-      local telescope = require("telescope")
-      telescope.setup(opts)
-      -- Here we define the Telescope extension for all plugins.
-      -- If you delete a plugin, you can also delete its Telescope extension.
-      if utils.is_available("nvim-notify") then telescope.load_extension("notify") end
-      if utils.is_available("telescope-fzf-native.nvim") then telescope.load_extension("fzf") end
-      if utils.is_available("telescope-undo.nvim") then telescope.load_extension("undo") end
-      if utils.is_available("project.nvim") then telescope.load_extension("projects") end
-      if utils.is_available("LuaSnip") then telescope.load_extension("luasnip") end
-      if utils.is_available("aerial.nvim") then telescope.load_extension("aerial") end
-      if utils.is_available("nvim-neoclip.lua") then
-        telescope.load_extension("neoclip")
-        telescope.load_extension("macroscope")
-      end
-    end,
-  },
-
-  --  UI icons [icons]
-  --  https://github.com/nvim-tree/nvim-web-devicons
-  {
-    "nvim-tree/nvim-web-devicons",
-    enabled = not vim.g.fallback_icons_enabled,
-    event = "User BaseDefered",
-    opts = {},
-  },
-
-  --  LSP icons [icons]
-  --  https://github.com/onsails/lspkind.nvim
-  {
-    "onsails/lspkind.nvim",
-    enabled = not vim.g.fallback_icons_enabled,
-    opts = {
-      mode = "symbol",
-      symbol_map = {
-        Array = "󰅪",
-        Boolean = "⊨",
-        Class = "󰌗",
-        Constructor = "",
-        Key = "󰌆",
-        Namespace = "󰅪",
-        Null = "NULL",
-        Number = "#",
-        Object = "󰀚",
-        Package = "󰏗",
-        Property = "",
-        Reference = "",
-        Snippet = "",
-        String = "󰀬",
-        TypeParameter = "󰊄",
-        Unit = "",
-      },
-      menu = {},
-    },
-    config = function(_, opts)
-      require("lspkind").init(opts)
-    end,
-  },
-
-  --  which-key.nvim [on-screen keybindings]
-  --  https://github.com/folke/which-key.nvim
-  {
-    "folke/which-key.nvim",
-    event = "User BaseDefered",
-
-    opts_extend = { "disable.ft", "disable.bt" },
-    opts = {
-      preset = "classic", -- "classic", "modern", or "helix"
-      icons = {
-        group = (vim.g.fallback_icons_enabled and "+") or "",
-        rules = false,
-        separator = "-",
-      },
-    },
-  },
-
--- Themes
-	-- Tokyonight
-	{
-		"folke/tokyonight.nvim",
-		lazy = false,
-		priority = 1000,
-		opts = {},
-	},
+		keys = {
+			-- Top Pickers & Explorer
+    { "<leader><space>", function() Snacks.picker.smart() end, desc = "Smart Find Files" },
+    { "<leader>,", function() Snacks.picker.buffers() end, desc = "Buffers" },
+    { "<leader>/", function() Snacks.picker.grep() end, desc = "Grep" },
+    { "<leader>:", function() Snacks.picker.command_history() end, desc = "Command History" },
+    { "<leader>n", function() Snacks.picker.notifications() end, desc = "Notification History" },
+    { "<leader>e", function() Snacks.explorer() end, desc = "File Explorer" },
+    -- find
+    { "<leader>fb", function() Snacks.picker.buffers() end, desc = "Buffers" },
+    { "<leader>fc", function() Snacks.picker.files({ cwd = vim.fn.stdpath("config") }) end, desc = "Find Config File" },
+    { "<leader>ff", function() Snacks.picker.files() end, desc = "Find Files" },
+    { "<leader>fg", function() Snacks.picker.git_files() end, desc = "Find Git Files" },
+    { "<leader>fp", function() Snacks.picker.projects() end, desc = "Projects" },
+    { "<leader>fr", function() Snacks.picker.recent() end, desc = "Recent" },
+    -- git
+    { "<leader>gb", function() Snacks.picker.git_branches() end, desc = "Git Branches" },
+    { "<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log" },
+    { "<leader>gL", function() Snacks.picker.git_log_line() end, desc = "Git Log Line" },
+    { "<leader>gs", function() Snacks.picker.git_status() end, desc = "Git Status" },
+    { "<leader>gS", function() Snacks.picker.git_stash() end, desc = "Git Stash" },
+    { "<leader>gd", function() Snacks.picker.git_diff() end, desc = "Git Diff (Hunks)" },
+    { "<leader>gf", function() Snacks.picker.git_log_file() end, desc = "Git Log File" },
+    -- Grep
+    { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
+    { "<leader>sB", function() Snacks.picker.grep_buffers() end, desc = "Grep Open Buffers" },
+    { "<leader>sg", function() Snacks.picker.grep() end, desc = "Grep" },
+    { "<leader>sw", function() Snacks.picker.grep_word() end, desc = "Visual selection or word", mode = { "n", "x" } },
+    -- search
+    { '<leader>s"', function() Snacks.picker.registers() end, desc = "Registers" },
+    { '<leader>s/', function() Snacks.picker.search_history() end, desc = "Search History" },
+    { "<leader>sa", function() Snacks.picker.autocmds() end, desc = "Autocmds" },
+    { "<leader>sb", function() Snacks.picker.lines() end, desc = "Buffer Lines" },
+    { "<leader>sc", function() Snacks.picker.command_history() end, desc = "Command History" },
+    { "<leader>sC", function() Snacks.picker.commands() end, desc = "Commands" },
+    { "<leader>sd", function() Snacks.picker.diagnostics() end, desc = "Diagnostics" },
+    { "<leader>sD", function() Snacks.picker.diagnostics_buffer() end, desc = "Buffer Diagnostics" },
+    { "<leader>sh", function() Snacks.picker.help() end, desc = "Help Pages" },
+    { "<leader>sH", function() Snacks.picker.highlights() end, desc = "Highlights" },
+    { "<leader>si", function() Snacks.picker.icons() end, desc = "Icons" },
+    { "<leader>sj", function() Snacks.picker.jumps() end, desc = "Jumps" },
+    { "<leader>sk", function() Snacks.picker.keymaps() end, desc = "Keymaps" },
+    { "<leader>sl", function() Snacks.picker.loclist() end, desc = "Location List" },
+    { "<leader>sm", function() Snacks.picker.marks() end, desc = "Marks" },
+    { "<leader>sM", function() Snacks.picker.man() end, desc = "Man Pages" },
+    { "<leader>sp", function() Snacks.picker.lazy() end, desc = "Search for Plugin Spec" },
+    { "<leader>sq", function() Snacks.picker.qflist() end, desc = "Quickfix List" },
+    { "<leader>sR", function() Snacks.picker.resume() end, desc = "Resume" },
+    { "<leader>su", function() Snacks.picker.undo() end, desc = "Undo History" },
+    { "<leader>uC", function() Snacks.picker.colorschemes() end, desc = "Colorschemes" },
+    -- LSP
+    { "gd", function() Snacks.picker.lsp_definitions() end, desc = "Goto Definition" },
+    { "gD", function() Snacks.picker.lsp_declarations() end, desc = "Goto Declaration" },
+    { "gr", function() Snacks.picker.lsp_references() end, nowait = true, desc = "References" },
+    { "gI", function() Snacks.picker.lsp_implementations() end, desc = "Goto Implementation" },
+    { "gy", function() Snacks.picker.lsp_type_definitions() end, desc = "Goto T[y]pe Definition" },
+    { "<leader>ss", function() Snacks.picker.lsp_symbols() end, desc = "LSP Symbols" },
+    { "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
+    -- Other
+    { "<leader>z",  function() Snacks.zen() end, desc = "Toggle Zen Mode" },
+    { "<leader>Z",  function() Snacks.zen.zoom() end, desc = "Toggle Zoom" },
+    { "<leader>.",  function() Snacks.scratch() end, desc = "Toggle Scratch Buffer" },
+    { "<leader>S",  function() Snacks.scratch.select() end, desc = "Select Scratch Buffer" },
+    { "<leader>n",  function() Snacks.notifier.show_history() end, desc = "Notification History" },
+    { "<leader>bd", function() Snacks.bufdelete() end, desc = "Delete Buffer" },
+    { "<leader>cR", function() Snacks.rename.rename_file() end, desc = "Rename File" },
+    { "<leader>gB", function() Snacks.gitbrowse() end, desc = "Git Browse", mode = { "n", "v" } },
+    { "<leader>gg", function() Snacks.lazygit() end, desc = "Lazygit" },
+    { "<leader>un", function() Snacks.notifier.hide() end, desc = "Dismiss All Notifications" },
+    { "<c-/>",      function() Snacks.terminal() end, desc = "Toggle Terminal" },
+    { "<c-_>",      function() Snacks.terminal() end, desc = "which_key_ignore" },
+    { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
+    { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
+		},
+	}
 }
-
