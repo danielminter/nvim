@@ -2,6 +2,9 @@ local opt = vim.opt
 
 opt.mouse = ''
 
+-- Colorscheme
+vim.cmd[[colorscheme tokyonight-night]]
+
 -- Leader
 vim.g.mapleader = " "
 

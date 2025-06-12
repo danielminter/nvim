@@ -1,4 +1,13 @@
 return {
+	-- Themes
+	{
+		"folke/tokyonight.nvim",
+		lazy = false,
+		priority = 1000,
+		opts = {},
+	},
+
+	-- Snacks
 	{
 		"folke/snacks.nvim",
 		priority = 1000,
@@ -94,5 +103,53 @@ return {
     { "]]",         function() Snacks.words.jump(vim.v.count1) end, desc = "Next Reference", mode = { "n", "t" } },
     { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference", mode = { "n", "t" } },
 		},
-	}
+	},
+
+	-- Cursorline
+	{
+		"ya2s/nvim-cursorline",
+		opts = {
+			cursorline = {
+				enable = true,
+				timeout = 1000,
+				number = false,
+			},
+			cursorword = {
+				enable = false,
+				min_length = 3,
+				hl = { underline = true },
+			},
+		},
+	},
+
+	-- Noice
+	{
+		"folke/noice.nvim",
+		event = "VeryLazy",
+		opts = {
+			lsp = {
+				override = {
+					["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+					["vim.lsp.util.stylize_markdown"] = true,
+				},
+			},
+			presets = {
+				bottom_search = false,
+				command_palette = true,
+				long_message_to_split = true,
+				inc_rename = false,
+				lsp_doc_border = true,
+			},
+		},
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+			"rcarriga/nvim-notify",
+		},
+	},
+
+	-- Scrollbar
+	{
+		"petertriho/nvim-scrollbar",
+		opts = {},
+	},
 }
