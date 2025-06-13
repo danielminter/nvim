@@ -2,7 +2,7 @@ return {
   -- File Operations for NeoTree to work with the LSP
   {
 	"antosha417/nvim-lsp-file-operations",
-	dependencies = {
+dependencies = {
 			"nvim-lua/plenary.nvim",
 			"nvim-neo-tree/neo-tree.nvim",
 	},
@@ -29,7 +29,9 @@ return {
 	{
 		"folke/which-key.nvim",
 		event = "VeryLazy",
-		opts = {},
+		opts = {
+			delay = 500,
+		 },
 		keys = {
 			{
 				"<leader>?",
